@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+<section id="poslovi" class="content">
+
+    <form id="searchForm" method="POST" action="/poslovi">
+        <label for="numAds">Broj oglasa:</label>
+        <select id="numAdsSelect" name="num_ads_dropdown">
+            <option value="">Odaberi broj oglasa</option>
+            {% for number in numbers %}
+                <option value="{{ number }}">{{ number }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" id="numAdsInput" name="num_ads" placeholder="Broj oglasa"><br><br>
+    
+        <label for="location">Lokacija:</label>
+        <select id="locationSelect" name="location">
+            <option value="">Odaberi lokaciju</option>
+            {% for location in locations %}
+                <option value="{{ location.geoSlug }}">{{ location.geoName }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" id="locationInput" name="location_dropdown" placeholder="Unesite lokaciju"><br><br>
+
+        <label for="industry">Industrija:</label>
+        <select id="industrySelect" name="industry">
+            <option value="">Odaberi industriju</option>
+            {% for industry in industries %}
+                <option value="{{ industry.industrySlug }}">{{ industry.industryName }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" id="industryInput" name="industry_dropdown" placeholder="Unesite industriju"><br><br>
+    
+        <label for="keyword">Oznaka:</label>
+        <input type="text" id="keyword" name="tag" pattern=".{2,50}" title="Unesite ključnu riječ duljine između 2 i 50 znakova" placeholder="Unesite ključnu riječ"><br><br>
+        
+        <button type="submit" name="submit_button" value="Prikaži iz baze">Prikaži iz baze</button>
+        <button type="submit" name="submit_button" value="Pretraži online ponudu">Pretraži online ponudu</button>
+    
+    </form>
+    <p style="text-align: center;">API poziv: {{ api_url }}</p>
+    <h1>Prikaz iz baze</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Šifra posla</th>
+                <th>Naslov posla</th>
+                <th>Industrija</th>
+                <th>URL posla/ponude</th>
+                <th>Lokacija</th>
+                <th>Opis posla</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for posao in poslovi %}
+                <tr>
+                    <td>{{ posao.id }}</td>
+                    <td>{{ posao.naslov }}</td>
+                    <td>{{ posao.industrija.industryName }}</td>
+                    <td>{{ posao.link }}</td>
+                    <td>{{ posao.lokacija.geoName }}</td>
+                    <td>{{ posao.opis }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h1>Online ponuda</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Šifra posla</th>
+                <th>Naslov posla</th>
+                <th>Industrija</th>
+                <th>URL posla/ponude</th>
+                <th>Lokacija</th>
+                <th>Opis posla</th>
+                <th>Datum objave</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.jobTitle }}</td>
+                <td>{{ job.jobIndustry[0] }}</td>
+                <td><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></td>
+                <td>{{ job.jobGeo }}</td>
+                <td>{{ job.jobExcerpt }}</td>
+                <td>{{ job.pubDate }}</td>
+            </tr>
+        {% endfor %}   
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+

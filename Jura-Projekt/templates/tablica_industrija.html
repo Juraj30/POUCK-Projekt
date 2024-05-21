@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4>Tablica industrija</h4>
+
+<form action="/tablica_industrija" method="post">
+    <button type="submit">Preuzmi i Spremi Podatke</button>
+</form>
+<div id="message" style="text-align: center;">
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>industryID</th>
+            <th>industryName</th>
+            <th>industrySlug</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for industry in industries %}
+        <tr>
+            <td>{{ industry.industryID }}</td>
+            <td>{{ industry.industryName }}</td>
+            <td>{{ industry.industrySlug }}</td>
+            <td>
+                <form action="/update_industrija/{{ industry.industryID }}" method="post">
+                    <input type="text" name="industryName" value="{{ industry.industryName }}">
+                    <input type="text" name="industrySlug" value="{{ industry.industrySlug }}">
+                    <button type="submit">Ažuriraj</button>
+                </form>
+                <form action="/delete_industrija/{{ industry.industryID }}" method="post">
+                    <button id="delete" type="submit" class="delete-button">Izbriši</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2>Dodaj novu industriju</h2>
+<form action="/add_industrija" method="post">
+    <input type="text" name="industryName" placeholder="Industry Name">
+    <input type="text" name="industrySlug" placeholder="Industry Slug">
+    <button type="submit">Dodaj industriju</button>
+</form>
+    <h1>Tablica industrija preko API</h1>
+    {{ table | safe }} 
+{% endblock %}
